@@ -1,0 +1,13 @@
+{
+    "name": "bamazon",
+    "version": "1.0.0",
+    "description": " creating a store like Amazon with the MySQL.",
+    "main": "customer.js",
+    "scripts": {
+      "test": "node customer.js"
+    },
+
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/zcarey90/bamazon"
+      },
