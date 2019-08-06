@@ -55,21 +55,31 @@ function quantity() {
   }
 }
 
-function itemInfo() {
-  inquirer.prompt([
+var count = 0;
+
+var askQuestion =  function(){
+    if (count < 2){
+  inquirer.prompt([{
     {
       type: "input",
-      message: "What item would you like to buy?",
+      message: "What item would you like to find?",
       name: "product",
       filter: Number
-    },
-
-    {
+    },{
       type: "input",
-      name: "quantity",
       message: "How many would like to purchase?",
+      name: "quantity",
       filter: Number
-    }
+    }]).then(function(answers){
+      var customerWants = new Programmer(answers.name,answers.find,
+        answers.purchase);
+      customerWants.printInfo();
+      count++;
+      askQuestion();
+    })
+  } else {
+    console.log("Finished shopping");
+
 
 function purchase(product, quantity) {
   var listQuantity = product.stock_quantity - quantity;
@@ -81,4 +91,5 @@ function purchase(product, quantity) {
     }
   );
 }
+askQuestion();
 
