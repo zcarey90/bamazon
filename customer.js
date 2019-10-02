@@ -22,7 +22,6 @@ listQuantity();
 function listQuantity() {
   console.log("Welcome to Bamazon");
   connection.query("SELECT * FROM products", function(err, res) {
-    console.log(res);
     var table = new Table({
       head: ["ID", "Product", "Department", "Price", "Stock"],
       colWidths: [10, 30, 30, 30, 30]
@@ -35,7 +34,6 @@ function listQuantity() {
       var stockQuantity = res[i].stock_quantity;
 
       table.push([itemId, productName, departmentName, price, stockQuantity]);
-      // console.log(table);
     }
     console.log("");
     console.log("Inventory");
@@ -65,24 +63,39 @@ var askQuestion = function() {
         }
       ])
       .then(function(answers) {
-        console.log(answers);
         answers.quantity, answers.product;
         connection.query(
           "SELECT * FROM products WHERE id=?",
           [answers.product],
           function(err, res) {
             var updatedStock = res[0].stock_quantity - answers.quantity;
-            console.log(updatedStock);
             connection.query(
               "UPDATE products SET ? WHERE ?",
               [{ stock_quantity: updatedStock }, { id: answers.product }],
               function(err, res) {
-                listQuantity();
-                askQuestion();
+                continueBuying();
               }
             );
           }
         );
       });
   }
+};
+
+var continueBuying = function() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "Would you like to buy another item?",
+        name: "continue"
+      }
+    ])
+    .then(function(next) {
+      if (next.continue === "y" || next.continue === "Y") {
+        listQuantity();
+      } else {
+        connection.end();
+      }
+    });
 };
